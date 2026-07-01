@@ -1,0 +1,9 @@
+description: "A shared, macro-free result-builder grammar for declarative element collection, in Swift."
+topics:
+  - primitives
+  - result-builder
+  - builder
+  - dsl
+homepage: "https://swift-institute.org"
+readme:
+  family: E

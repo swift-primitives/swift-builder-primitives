@@ -1,114 +1,89 @@
-// swift-tools-version:5.10
+// swift-tools-version: 6.3.1
 
 import PackageDescription
 
-extension String {
-    static let builders: Self = "Builders"
-    static let arrayBuilder: Self = "ArrayBuilder"
-    static let dictionaryBuilder: Self = "DictionaryBuilder"
-    static let setBuilder: Self = "SetBuilder"
-    static let stringBuilder: Self = "StringBuilder"
-    static let markdownBuilder: Self = "MarkdownBuilder"
-}
-
-extension Target.Dependency {
-    static var builders: Self { .target(name: .builders) }
-    static var arrayBuilder: Self { .target(name: .arrayBuilder) }
-    static var dictionaryBuilder: Self { .target(name: .dictionaryBuilder) }
-    static var setBuilder: Self { .target(name: .setBuilder) }
-    static var stringBuilder: Self { .target(name: .stringBuilder) }
-    static var markdownBuilder: Self { .target(name: .markdownBuilder) }
-}
-
 let package = Package(
-    name: "swift-builders",
+    name: "swift-builder-primitives",
+    platforms: [
+        .macOS(.v26),
+        .iOS(.v26),
+        .tvOS(.v26),
+        .watchOS(.v26),
+        .visionOS(.v26),
+    ],
     products: [
+        // MARK: - Grammar
         .library(
-            name: .builders,
-            targets: [
-                .builders,
-                .arrayBuilder,
-                .dictionaryBuilder,
-                .setBuilder,
-                .stringBuilder,
-                .markdownBuilder,
-            ]
+            name: "Builder Primitives",
+            targets: ["Builder Primitives"]
         ),
+
+        // MARK: - Test Support
         .library(
-            name: .arrayBuilder,
-            targets: [.arrayBuilder]
-        ),
-        .library(
-            name: .setBuilder,
-            targets: [.setBuilder]
-        ),
-        .library(
-            name: .stringBuilder,
-            targets: [.stringBuilder]
-        ),
-        .library(
-            name: .dictionaryBuilder,
-            targets: [.dictionaryBuilder]
-        ),
-        .library(
-            name: .markdownBuilder,
-            targets: [.markdownBuilder]
+            name: "Builder Primitives Test Support",
+            targets: ["Builder Primitives Test Support"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
+        // `Buildable` refines `Initiable` (the empty-construction half); the
+        // grow-and-build capability composes empty-init with one grow op. L1→L1,
+        // acyclic ([MOD-032]): initialization-primitives has zero dependencies.
+        .package(url: "https://github.com/swift-primitives/swift-initialization-primitives.git", branch: "main"),
+        // E2 (storage-small-substrate.md): verbose Storage.Contiguous<Memory.Heap> needs direct deps (MemberImportVisibility).
+        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
+    ],
     targets: [
+        // MARK: - Grammar
         .target(
-            name: .builders,
+            name: "Builder Primitives",
             dependencies: [
-                .arrayBuilder,
-                .dictionaryBuilder,
-                .setBuilder,
-                .stringBuilder,
-                .markdownBuilder,
+                .product(name: "Buffer Linear Primitives", package: "swift-buffer-linear-primitives"),
+                .product(name: "Initialization Primitives", package: "swift-initialization-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
             ]
         ),
-        .testTarget(
-            name: .builders.tests,
+
+        // MARK: - Test Support
+        .target(
+            name: "Builder Primitives Test Support",
             dependencies: [
-                .builders,
-            ]
+                "Builder Primitives",
+                .product(name: "Buffer Linear Primitives Test Support", package: "swift-buffer-linear-primitives"),
+            ],
+            path: "Tests/Support"
         ),
-        .target(name: .arrayBuilder),
+
+        // MARK: - Tests
         .testTarget(
-            name: .arrayBuilder.tests,
+            name: "Builder Primitives Tests",
             dependencies: [
-                .arrayBuilder,
-            ]
-        ),
-        .target(name: .dictionaryBuilder),
-        .testTarget(
-            name: .dictionaryBuilder.tests,
-            dependencies: [
-                .dictionaryBuilder,
-            ]
-        ),
-        .target(name: .setBuilder),
-        .testTarget(
-            name: .setBuilder.tests,
-            dependencies: [
-                .setBuilder,
-            ]
-        ),
-        .target(name: .stringBuilder),
-        .testTarget(
-            name: .stringBuilder.tests,
-            dependencies: [
-                .stringBuilder,
-            ]
-        ),
-        .target(name: .markdownBuilder),
-        .testTarget(
-            name: .markdownBuilder.tests,
-            dependencies: [
-                .markdownBuilder,
+                "Builder Primitives",
+                "Builder Primitives Test Support",
             ]
         ),
     ],
+    swiftLanguageModes: [.v6]
 )
 
-extension String { var tests: Self { self + " Tests" } }
+for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
+    let ecosystem: [SwiftSetting] = [
+        .strictMemorySafety(),
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("InternalImportsByDefault"),
+        .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+        .enableExperimentalFeature("Lifetimes"),
+        .enableExperimentalFeature("SuppressedAssociatedTypes"),
+        .enableUpcomingFeature("InferIsolatedConformances"),
+        .enableUpcomingFeature("LifetimeDependence"),
+    ]
+
+    let package: [SwiftSetting] = []
+
+    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
+}

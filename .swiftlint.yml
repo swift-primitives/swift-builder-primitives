@@ -1,15 +1,4 @@
-disabled_rules:
-  - line_length
-  - function_body_length
-  - type_body_length
-  - file_length
-  - nesting  # Allow deeply nested enums for namespacing
-  - redundant_discardable_let  # Preserve 'let _ =' in result builder contexts (required for Swift 6.0+)
-opt_in_rules:
-  - explicit_init
-  - explicit_type_interface
-included:
-  - Sources
-  - Tests
-excluded:
-  - .build
+# SwiftLint configuration
+# Inherits from the shared swift-primitives parent configuration.
+
+parent_config: https://raw.githubusercontent.com/swift-primitives/.github/main/.swiftlint.yml
