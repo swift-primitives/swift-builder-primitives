@@ -16,15 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build + test matrix — see swift-primitives/.github/.github/workflows/swift-ci.yml
-  # (layer wrapper that delegates universal jobs to swift-institute and adds
-  # the L1 embedded-build invariant)
   ci:
     uses: swift-primitives/.github/.github/workflows/swift-ci.yml@main
     secrets: inherit
 
-  # DocC umbrella-catalog validation per [DOC-019a] — see
-  # swift-primitives/.github/.github/workflows/swift-docs.yml
   docs:
     uses: swift-primitives/.github/.github/workflows/swift-docs.yml@main
     secrets: inherit
