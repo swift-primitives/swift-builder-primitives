@@ -11,6 +11,10 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  actions: read
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -18,8 +22,6 @@ concurrency:
 jobs:
   ci:
     uses: swift-primitives/.github/.github/workflows/swift-ci.yml@main
-    secrets: inherit
-
-  docs:
-    uses: swift-primitives/.github/.github/workflows/swift-docs.yml@main
+    with:
+      integrated-docs: true
     secrets: inherit
