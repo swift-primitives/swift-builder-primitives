@@ -1,4 +1,0 @@
-# SwiftLint configuration
-# Inherits from the shared swift-primitives parent configuration.
-
-parent_config: https://raw.githubusercontent.com/swift-primitives/.github/main/.swiftlint.yml
