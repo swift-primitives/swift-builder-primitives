@@ -119,7 +119,10 @@ extension Buildable where Self: ~Copyable {
     /// - Parameter content: A ``Builder`` body collecting the elements to add.
     /// - Throws: `Failure` if the conformer's empty construction (`init()`) fails.
     @inlinable
-    public init(@Builder<Element> _ content: () -> Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear) throws(Failure) {
+    public init(
+        @Builder<Element> _ content: () ->
+            Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear
+    ) throws(Failure) {
         try self.init()
         var buffer = content()
         while !buffer.isEmpty {
