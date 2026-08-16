@@ -39,6 +39,20 @@ extension `Builder Tests`.Unit {
         let tokens = Fixture.Tokens {}
         #expect(tokens.ids() == [])
     }
+
+    /// Release-mode regression fixture for swift-ownership-primitives#13: two
+    /// builder elements are enough to drive the `while !rest.isEmpty` drain in
+    /// `Builder.buildPartialBlock(accumulated:next:)`. At -O, before the
+    /// `~Escapable` inout-view initializers became `@_transparent`, the loop
+    /// condition observed a pre-mutation count and never terminated.
+    @Test
+    func `a two element body drains and terminates`() {
+        let tokens = Fixture.Tokens {
+            Fixture.Token(1)
+            Fixture.Token(2)
+        }
+        #expect(tokens.ids() == [1, 2])
+    }
 }
 
 // MARK: - Edge Case
