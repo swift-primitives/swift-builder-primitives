@@ -180,17 +180,8 @@ extension Builder where Component: ~Copyable {
     ) -> Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Component>>.Linear {
         var result = consume accumulated
         var rest = consume next
-        // Counted drain, not `while !rest.isEmpty`. At -O the condition form
-        // kept observing a pre-mutation count: `remove.first()` drained `rest`
-        // but `isEmpty` never became true, so the loop never terminated and the
-        // unbounded `append` growth exhausted memory (the Linux · release leg
-        // died mid-run with no test output; debug passed). Reading the trip
-        // count once, before the first mutation, is stale-load-proof.
-        var remaining = rest.count
-        while remaining > .zero {
-            remaining = remaining.subtract.saturating(.one)
-            let element = rest.remove.first()
-            result.append(element)
+        while !rest.isEmpty {
+            result.append(rest.remove.first())
         }
         return result
     }

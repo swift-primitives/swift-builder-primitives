@@ -125,12 +125,8 @@ extension Buildable where Self: ~Copyable {
     ) throws(Failure) {
         try self.init()
         var buffer = content()
-        // Counted drain — see the note on `Builder.buildPartialBlock(accumulated:next:)`.
-        var remaining = buffer.count
-        while remaining > .zero {
-            remaining = remaining.subtract.saturating(.one)
-            let element = buffer.remove.first()
-            self.add(element)
+        while !buffer.isEmpty {
+            self.add(buffer.remove.first())
         }
     }
 }
