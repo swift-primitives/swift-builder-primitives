@@ -43,7 +43,9 @@ extension Fixture.Sink {
     public consuming func ids() -> [Int] {
         var out: [Int] = []
         var rest = storage
-        while !rest.isEmpty {
+        var remaining = rest.count
+        while remaining > .zero {
+            remaining = remaining.subtract.saturating(.one)
             out.append(rest.remove.first().id)
         }
         return out

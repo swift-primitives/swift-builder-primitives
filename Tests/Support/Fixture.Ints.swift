@@ -35,7 +35,9 @@ extension Fixture.Ints {
     public consuming func values() -> [Int] {
         var out: [Int] = []
         var rest = storage
-        while !rest.isEmpty {
+        var remaining = rest.count
+        while remaining > .zero {
+            remaining = remaining.subtract.saturating(.one)
             out.append(rest.remove.first())
         }
         return out
