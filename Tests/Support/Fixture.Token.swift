@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Builder_Primitives
+import Builder_Primitives
 
 extension Fixture {
     /// A move-only (`~Copyable`) element, used to prove the grammar collects
