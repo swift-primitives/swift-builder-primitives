@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Builder_Primitives_Test_Support
 import Testing
 
@@ -18,8 +7,6 @@ struct `Buildable Tests` {
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
 }
-
-// MARK: - Unit
 
 extension `Buildable Tests`.Unit {
 
@@ -46,8 +33,6 @@ extension `Buildable Tests`.Unit {
     }
 }
 
-// MARK: - Edge Case
-
 extension `Buildable Tests`.`Edge Case` {
 
     @Test
@@ -66,8 +51,6 @@ extension `Buildable Tests`.`Edge Case` {
         #expect(unique.elements == [1, 2])
     }
 }
-
-// MARK: - Integration
 
 extension `Buildable Tests`.Integration {
 

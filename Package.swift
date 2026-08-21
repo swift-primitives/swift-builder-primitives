@@ -12,13 +12,12 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Grammar
+
         .library(
             name: "Builder Primitives",
             targets: ["Builder Primitives"]
         ),
 
-        // MARK: - Test Support
         .library(
             name: "Builder Primitives Test Support",
             targets: ["Builder Primitives Test Support"]
@@ -29,14 +28,12 @@ let package = Package(
             url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git",
             branch: "main"
         ),
-        // `Buildable` refines `Initiable` (the empty-construction half); the
-        // grow-and-build capability composes empty-init with one grow op. L1→L1,
-        // acyclic ([MOD-032]): initialization-primitives has zero dependencies.
+
         .package(
             url: "https://github.com/swift-primitives/swift-initialization-primitives.git",
             branch: "main"
         ),
-        // E2 (storage-small-substrate.md): verbose Storage.Contiguous<Memory.Heap> needs direct deps (MemberImportVisibility).
+
         .package(
             url: "https://github.com/swift-primitives/swift-storage-primitives.git",
             branch: "main"
@@ -51,7 +48,7 @@ let package = Package(
         ),
     ],
     targets: [
-        // MARK: - Grammar
+
         .target(
             name: "Builder Primitives",
             dependencies: [
@@ -75,7 +72,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Test Support
         .target(
             name: "Builder Primitives Test Support",
             dependencies: [
@@ -88,7 +84,6 @@ let package = Package(
             path: "Tests/Support"
         ),
 
-        // MARK: - Tests
         .testTarget(
             name: "Builder Primitives Tests",
             dependencies: [

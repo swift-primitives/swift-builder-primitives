@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Builder_Primitives_Test_Support
 import Testing
 
@@ -19,8 +8,6 @@ struct `Builder Tests` {
     @Suite struct Integration {}
     @Suite(.serialized) struct Performance {}
 }
-
-// MARK: - Unit
 
 extension `Builder Tests`.Unit {
 
@@ -40,11 +27,6 @@ extension `Builder Tests`.Unit {
         #expect(tokens.ids() == [])
     }
 
-    /// Release-mode regression fixture for swift-ownership-primitives#13: two
-    /// builder elements are enough to drive the `while !rest.isEmpty` drain in
-    /// `Builder.buildPartialBlock(accumulated:next:)`. At -O, before the
-    /// `~Escapable` inout-view initializers became `@_transparent`, the loop
-    /// condition observed a pre-mutation count and never terminated.
     @Test
     func `a two element body drains and terminates`() {
         let tokens = Fixture.Tokens {
@@ -54,8 +36,6 @@ extension `Builder Tests`.Unit {
         #expect(tokens.ids() == [1, 2])
     }
 }
-
-// MARK: - Edge Case
 
 extension `Builder Tests`.`Edge Case` {
 
@@ -88,8 +68,6 @@ extension `Builder Tests`.`Edge Case` {
     }
 }
 
-// MARK: - Integration
-
 extension `Builder Tests`.Integration {
 
     @Test
@@ -117,8 +95,6 @@ extension `Builder Tests`.Integration {
         #expect(ints.values() == [1, 2, 3, 5, 6, 7, 8])
     }
 }
-
-// MARK: - Performance
 
 extension `Builder Tests`.Performance {
 
